@@ -18,19 +18,24 @@ export default function Navbar() {
 
       {/* en celular: menú hamburguesa (el dock se oculta con CSS) */}
       <button
-        className="hamburguesa"
+        className="btn-solid theme-secondary hamburguesa"
+        type="button"
         onClick={() => setAbierto((a) => !a)}
         aria-label="Menu"
         aria-expanded={abierto}
       >
         <i className={`bi ${abierto ? "bi-x-lg" : "bi-list"}`}></i>
       </button>
-      <nav className="menu-movil" data-open={abierto || undefined}>
-        {(["about", "skills", "projects", "contact"] as const).map((k) => (
-          <a key={k} href={`#${k}`} onClick={() => setAbierto(false)}>
+      <nav className="menu menu-movil" data-open={abierto || undefined} data-bs-theme="dark">
+        {(["about", "skills", "projects"] as const).map((k) => (
+          <a key={k} className="menu-item" href={`#${k}`} onClick={() => setAbierto(false)}>
             {t.nav[k]}
           </a>
         ))}
+        <hr className="menu-divider" />
+        <a className="menu-item" href="#contact" onClick={() => setAbierto(false)}>
+          {t.nav.contact}
+        </a>
       </nav>
 
 

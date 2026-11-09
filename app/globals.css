@@ -103,6 +103,8 @@ body {
   box-shadow: 0 8px 24px rgba(6, 20, 27, 0.25);
 }
 .hero-nombre strong { font-size: 22px; }
+/* Photo inside the text card: only shown on mobile */
+.hero-foto-movil { display: none; }
 
 /* ── Buttons ── */
 .hero-botones {
@@ -328,6 +330,53 @@ body {
 @media (max-width: 700px) {
   /* Hero */
   .hero { flex-direction: column; }
+  /* Push the hero down while the side menu is open so it isn't covered */
+  .hero { transition: margin-top 0.35s ease; }
+  body:has(.menu-movil[data-open]) .hero { margin-top: 290px; }
+  .hero-foto { display: none; }
+  /* Photo in the bottom-right corner of the text card, next to the eyes */
+  .hero-foto-movil {
+    display: block;
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    width: 160px;
+    height: 190px;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid rgba(204, 208, 207, 0.35);
+    box-shadow: 0 8px 24px rgba(6, 20, 27, 0.35);
+  }
+  .hero-foto-movil img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Name label over the bottom of the photo */
+  .hero-foto-movil strong {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    line-height: 1.2;
+    text-align: center;
+    color: #CCD0CF;
+    background: rgba(17, 33, 45, 0.55);
+    border: 1px solid rgba(204, 208, 207, 0.35);
+    border-radius: 12px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .hero-texto { padding: 40px 24px; }
+  .hero-texto h1 {
+    font-size: clamp(32px, 10vw, 44px);
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+  .hero-texto p { font-size: 22px; }
   .hero-dock { position: static; margin-top: 32px; }
   .hero-dock .eyt { margin-left: -50px; }
 
@@ -338,7 +387,7 @@ body {
   .about-contenido { flex-direction: column; }
   .skills-caja { flex-direction: column; }
   /* The Projects section is hidden on mobile */
-  .projects { display: none; }
+  
 
   /* Footer */
   .footer-contenido { flex-direction: column; align-items: flex-start; }
@@ -350,12 +399,23 @@ body {
      right; the dock and the language switch are hidden */
   div.gdock-escena {
     position: relative;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     justify-items: stretch;
+    gap: 12px;
     margin-top: 24px;
   }
-  .gdock-escena .gdock,
-  .gdock-escena .idioma { display: none; }
+  .gdock-escena .gdock { display: none; }
+  /* Language switch sits right next to the hamburger button */
+  div.gdock-escena .idioma {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+  div.gdock-escena .hamburguesa {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  div.gdock-escena .marca { grid-column: 1; grid-row: 1; }
   div.gdock-escena .marca {
     justify-self: start;
     font-size: 38px;
@@ -377,32 +437,48 @@ body {
     backdrop-filter: blur(10px);
     cursor: pointer;
   }
-  .menu-movil[data-open] {
-    position: absolute;
-    top: calc(100% + 12px);
-    left: 50%;
+  /* Side menu: slides in from the right, leaving a margin so it never
+     covers the hero edge-to-edge */
+  .menu-movil {
+    position: fixed;
+    top: 110px;
+    right: 16px;
     z-index: 50;
     display: flex;
     flex-direction: column;
     gap: 4px;
-    width: min(90vw, 320px);
+    width: min(75vw, 280px);
     padding: 12px;
-    transform: translateX(-50%);
-    background: rgba(17, 33, 45, 0.9);
+    background: rgba(17, 33, 45, 0.92);
     border: 1px solid rgba(155, 168, 171, 0.35);
     border-radius: 24px;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
+    transform: translateX(calc(100% + 32px));
+    visibility: hidden;
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.25s ease, visibility 0s linear 0.35s;
   }
-  .menu-movil a {
+  .menu-movil[data-open] {
+    transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
+    transition: transform 0.35s ease, opacity 0.25s ease, visibility 0s;
+  }
+  .menu-movil .menu-item {
     padding: 14px 18px;
     font-size: 20px;
     color: #CCD0CF;
     text-decoration: none;
     border-radius: 14px;
   }
-  .menu-movil a:hover { background: rgba(155, 168, 171, 0.25); }
-  /* Projects is hidden on mobile, so its link is too */
-  .menu-movil a[href="#projects"] { display: none; }
+  .menu-movil .menu-item:hover,
+  .menu-movil .menu-item.active { background: rgba(155, 168, 171, 0.25); }
+  .menu-movil .menu-divider {
+    width: 100%;
+    margin: 6px 0;
+    border: 0;
+    border-top: 1px solid rgba(155, 168, 171, 0.35);
+  }
 }
 

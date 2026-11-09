@@ -31,6 +31,12 @@ export default function Hero() {
         <div className="hero-dock">
           <EyeTracker within=".hero-texto" />
         </div>
+
+        {/* Mobile only: the photo lives inside the text card */}
+        <div className="hero-foto-movil">
+          <Image src={foto} alt="Foto de Ciro" />
+          <strong>Ciro Sebastián Solano Vega</strong>
+        </div>
       </div>
 
       <div className="hero-foto">
