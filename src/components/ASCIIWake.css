@@ -1,0 +1,18 @@
+/* ── design tokens, mapped to this project's palette ────────
+   Defined on the component's own root so nothing leaks out.
+   The dots are the ink: this project's light grey, #CCD0CF. */
+.asc {
+  --ink: #ccd0cf;
+  --fill-on: #ccd0cf;
+}
+
+/* ══ ASCII wake ════════════════════════════════════════════ */
+.asc {
+  position: relative;
+  cursor: crosshair;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;}
+
+.asc-canvas { display: block; color: var(--fill-on, var(--ink)); }

@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "bootstrap-icons": "^1.13.2",
+    "flag-icons": "^7.6.0",
+    "lucide-react": "^1.70.0",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"

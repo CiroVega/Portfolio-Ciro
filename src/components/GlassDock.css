@@ -1,0 +1,232 @@
+/* ── variables del material (solo colores de la paleta) ──── */
+.gdock-escena {
+  --pane: rgba(17, 33, 45, 0.55);
+  --ink: #ccd0cf;
+  --on-ink: #06141b;
+  --fill-on: #ccd0cf;
+  --fill-slab: #06141b;
+  --shadow-rgb: 6, 20, 27;
+  --font-ui: Arial, sans-serif;
+  --g-blur: 10px;
+  --g-sat: 150%;
+  --g-bright: 100%;
+  --g-edge-hi: 0.55;
+  --g-edge-lo: 0.06;
+  --g-edge-far: 0.25;
+  --g-spec: 0.25;
+  --g-lift: 0.45;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  max-width: 1280px;
+  margin: 64px auto 20px;
+  padding: 0 20px;
+}
+.gdock-escena > .gdock { justify-self: center; }
+
+/* interruptor de idioma, a la derecha */
+.idioma {
+  justify-self: end;
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px;
+  background: var(--pane);
+  border: 1px solid rgba(155, 168, 171, 0.35);
+  border-radius: 999px;
+  backdrop-filter: blur(var(--g-blur));
+}
+.idioma-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.idioma-btn:hover { opacity: 0.85; }
+.idioma-btn[data-active="true"] {
+  opacity: 1;
+  border-color: var(--ink);
+}
+.idioma-btn .fi {
+  width: 22px;
+  height: 16px;
+  border-radius: 3px;
+  /* banderas en blanco y negro */
+  filter: grayscale(1);
+}
+
+/* nombre a la izquierda */
+.marca {
+  justify-self: start;
+  font-family: var(--font-ui);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+/* ── glass navigation ────────────────────────────────────── */
+.gdock {
+  position: relative;
+  background: var(--pane);
+  -webkit-backdrop-filter: blur(var(--g-blur, 2px))
+    saturate(var(--g-sat, 150%)) brightness(var(--g-bright, 100%));
+  backdrop-filter: blur(var(--g-blur, 2px)) saturate(var(--g-sat, 150%))
+    brightness(var(--g-bright, 100%));
+  isolation: isolate;
+  color: var(--ink);
+}
+
+.gdock::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* dock */
+.gdock {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 16px 36px;
+  border-radius: 40px;
+  /* sideways is the dock's, up and down stays the page's */
+  touch-action: pan-y;
+}
+
+/* no tile behind the icon: the glyph scales instead */
+.gdock-item {
+  position: relative;
+  min-width: 88px;
+  height: 56px;
+  padding: 0 20px;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 600;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  opacity: 0.42;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: opacity 220ms ease;
+}
+
+/* the magnification lives here, so the dot and the label keep
+   their own size and their own distance from the bar */
+.gdock-glyph {
+  display: grid;
+  place-items: center;
+  transform-origin: center bottom;
+  transition: transform 420ms cubic-bezier(0.24, 1.34, 0.38, 1);
+}
+
+.gdock-item[data-near="1"] { opacity: 0.66; }
+.gdock-item[data-near="0"] { opacity: 1; }
+.gdock-item[data-active="true"] { opacity: 1; }
+
+.gdock-item:focus-visible {
+  outline: 1.5px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+/* the running dot, the only persistent mark in the dock */
+.gdock-dot {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--ink);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 220ms ease,
+    transform 420ms cubic-bezier(0.24, 1.34, 0.38, 1);
+}
+
+.gdock-dot[data-on="true"] { opacity: 0.55; transform: scale(1); }
+
+/* ONE tip for the whole dock: a pill above the bar that slides to
+   the icon under the pointer and grows or shrinks to the word. */
+.gdock-tip {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--fill-on, var(--ink));
+  color: var(--fill-slab, var(--on-ink));
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 32px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms cubic-bezier(0.22, 1, 0.36, 1);
+  letter-spacing: 0em;
+}
+
+.gdock-tip > span { flex: none; }
+
+.gdock-tip:not([data-ready]) {
+  transition: opacity 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gdock-tip[data-on="true"] { opacity: 1; }
+
+/* ── the rim: a gradient ring, bright at the corner facing the
+   light and almost nothing along the sides ─────────────── */
+.gdock::before {
+  border-color: transparent;
+  background: linear-gradient(
+      142deg,
+      rgba(204, 208, 207, var(--g-edge-hi, 0)) 0%,
+      rgba(204, 208, 207, var(--g-edge-lo, 0)) 26%,
+      rgba(204, 208, 207, var(--g-edge-lo, 0)) 62%,
+      rgba(204, 208, 207, var(--g-edge-far, 0)) 100%
+    )
+    border-box;
+  -webkit-mask: linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* ── thickness: lit top edge + soft shadow underneath ────── */
+.gdock {
+  box-shadow:
+    inset 0 1px 0 rgba(204, 208, 207, var(--g-spec, 0)),
+    0 10px 40px rgba(var(--shadow-rgb), var(--g-lift, 0));
+}
+
+@media (max-width: 700px) {
+  .gdock-escena { grid-template-columns: 1fr; justify-items: center; }
+  .gdock-escena .idioma,
+  .gdock-escena .marca { justify-self: center; }
+}
